@@ -1,0 +1,78 @@
+@import './Reset.scss';
+
+.App {
+
+    text-align: center;
+
+    .Paper {
+        width: 90vw;
+        padding: 2vw;
+        margin: 2vw;
+
+        position: relative;
+    }
+
+    .App-PopoverList {
+        text-align: left;
+    }
+
+    // Page List //
+
+    .App-List {
+        .listItemtext {
+            color: rgb(0, 0, 100);
+        }
+
+        .App-PopoverModif {
+            width: 10vw;
+        }
+    }
+
+    // Page Modif //
+
+    .App-Modif {
+        .containerInput {
+            margin: 1vw;
+
+            .textField {
+                margin-top: 2vw;
+                margin-bottom: 2vw;
+            }
+        }
+
+        #buttonAnnulerUser {
+            position: absolute;
+            right: 2vw;
+            top: 2vw;
+        }
+
+        #buttonModifUser {
+            margin-left: 35vw;
+            margin-right: 35vw;
+        }
+    }
+
+    // Page Info //
+
+    .App-Info {
+        .App-Section-Info {
+            width: max-content;
+            text-align: left;
+            margin: auto;
+        }
+
+        .App-PopoverModif {
+            position: absolute;
+            right: 2vw;
+            top: 2vw;
+        }
+
+        .InfoModifiable {
+            font-weight: bolder;
+        }
+
+        #InfoTransaction {
+            margin-top: 5vw;
+        }
+    }
+}
