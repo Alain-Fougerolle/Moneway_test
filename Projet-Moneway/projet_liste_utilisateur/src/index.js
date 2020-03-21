@@ -1,7 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+import { Provider } from 'react-redux';
+import Store from './store/configureStore';
+
+render(
+    <Provider store={Store}>
+        <App />
+    </Provider>, 
+    document.querySelector('#root')
+);
+
 serviceWorker.unregister();

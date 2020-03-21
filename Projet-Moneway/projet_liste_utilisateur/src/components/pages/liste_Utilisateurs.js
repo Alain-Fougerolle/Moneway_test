@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // React Route //
 import { Link } from "react-router-dom";
@@ -13,12 +14,15 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 // Import Material UI Icons //
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 // Components //
-import PopoverModif from "../components_page/modif_popover";
+import PopoverModif from "../popover/modif_popover";
 
+// Redux //
+import { connect } from 'react-redux';
 
-export default class Liste extends Component {
+class Liste extends Component {
 
     render() {
         return (
@@ -30,44 +34,68 @@ export default class Liste extends Component {
                 alignItems="center"
             >
 
-                <Paper className="Paper">
-                    
-                    {this.props.users
-                        ? <List>
-                            <h2>Listes des utilisateurs</h2>
-                            {this.props.users.map(({ id, prenom, nom }) => (
-                                <ListItem button key={id}>
-                                    <Link to="/info">
-                                        <ListItemIcon>
-                                            <ArrowForwardIosOutlinedIcon color="primary" />
-                                        </ListItemIcon>
-                                    </Link>
-                                    
-                                    <ListItemText 
-                                        className="listItemtext"
-                                        onClick={() => { this.props.recupUser(id) }}
+                {this.props.users
+                    ? <List>
+                        <h2 className="titreListeUser">Listes des utilisateurs</h2>
+                        {this.props.users.map(({ id, prenom, nom }) => (
+                            <Paper className="Paper" key={id}>
+                                <ListItem button>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justify="space-between"
+                                        alignItems="center"
+                                        wrap="nowrap"
                                     >
-                                        <Grid 
-                                            container 
-                                            direction="row"
-                                            justify="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Link to="/info">
-                                                <p>{prenom} {nom}</p>
-                                            </Link>
-                                            <PopoverModif />
-                                        </Grid>
-                                    </ListItemText>
-                                </ListItem>
-                             
-                            ))}
-                        </List>
+                                        <Link to="/info" className="Link_Info">
+                                            <ListItemIcon>
+                                                <ArrowForwardIosOutlinedIcon color="primary" fontSize="large" />
+                                            </ListItemIcon>
+                                            <ListItemIcon>
+                                                <AccountBoxIcon 
+                                                    color={this.props.status.includes(id) ? "secondary" : "primary"} 
+                                                    fontSize="large" 
+                                                    className="AccountBoxIcon"
+                                                />
+                                            </ListItemIcon>
 
-                        : <p>Pas de connection a la bdd</p>
-                    }
-                </Paper>
+                                            <ListItemText
+                                                className="listItemtext"
+                                                onClick={() => { this.props.recupUser(id) }}
+                                            >
+                                                <p className="paragrapheListe">{prenom} {nom}</p>
+                                            </ListItemText>
+
+                                        </Link>
+                                        <PopoverModif />
+                                    </Grid>
+                                </ListItem>
+                            </Paper>
+                        ))}
+                    </List>
+
+                    : <p>Pas de connection a la bdd</p>
+                }
+
             </Grid>
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        status: state.status
+    }
+}
+
+export default connect(mapStateToProps)(Liste)
+
+Liste.propTypes = {
+    recupUser: PropTypes.func,
+
+    users: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.bool,
+        PropTypes.arrayOf(PropTypes.object)
+    ]),
+};

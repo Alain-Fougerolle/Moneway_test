@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 // Import Material UI Icons //
-import ReplyIcon from '@material-ui/icons/Reply';
+import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 
 const useStyles = makeStyles(theme => ({
     popover: {
@@ -20,7 +20,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function PopoverList() {
+
+export default function PopoverModif() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -35,17 +36,17 @@ export default function PopoverList() {
     const open = Boolean(anchorEl);
 
     return (
-        <div className="App-PopoverList">
+        <div className="App-PopoverModif">
     
-            <Link to="/liste">
-                <ReplyIcon 
+            <Link to="/modif">
+                <EditTwoToneIcon 
                     color="primary" 
                     fontSize="large"
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                 />
             </Link>
-            
+
             <Popover
                 id="mouse-over-popover"
                 className={classes.popover}
@@ -57,16 +58,16 @@ export default function PopoverList() {
 
                 anchorOrigin={{
                     vertical: 'center',
-                    horizontal: 'right',
+                    horizontal: 'left',
                 }}
                 transformOrigin={{
                     vertical: 'center',
-                    horizontal: 'left',
+                    horizontal: 'right',
                 }}
                 onClose={handlePopoverClose}
                 disableRestoreFocus
             >
-                <Typography>Revenir à la liste des utilisateurs</Typography>
+                <Typography>Modifier utilisateur</Typography>
             </Popover>
         </div>
     );

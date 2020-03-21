@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // React Route //
 import { Link } from "react-router-dom";
@@ -10,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 // Components //
-import  PopoverList from "../components_page/list_popover";
+import PopoverList from "../popover/list_popover";
 
 
 export default class Modif extends Component {
@@ -26,10 +27,30 @@ export default class Modif extends Component {
             >
 
                 <Paper className="Paper">
-                    <PopoverList />
-                    <h2>Modification des informations</h2>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                    >
+                        <PopoverList />
+                        {this.props.user
+                            ? <Link to="/info">
+                                <Button
+                                    id="buttonAnnulerUser"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Annuler
+                                </Button>
+                            </Link>
+
+                            : <div></div>
+                        }
+                    </Grid>
+                    
                     {this.props.user
                         ? <form id="formModifUser">
+                            <h2 className="titreModif">Modification des informations</h2>
                             <Grid
                                 className="App-Modif"
                                 container
@@ -38,37 +59,39 @@ export default class Modif extends Component {
                                 alignItems="center"
                             >
                                 <div className="containerInput">
-                                    <TextField className="textField" label="Prenom"      variant="outlined" name="prenom"     defaultValue={this.props.user.prenom} />
-                                    <TextField className="textField" label="Nom"         variant="outlined" name="nom"        defaultValue={this.props.user.nom}/>
+                                    <TextField className="textField" label="Prenom" variant="outlined" name="prenom" defaultValue={this.props.user.prenom} />
+                                    <TextField className="textField" label="Nom" variant="outlined" name="nom" defaultValue={this.props.user.nom} />
                                 </div>
 
                                 <div className="containerInput">
-                                    <TextField className="textField" label="Rue"         variant="outlined" name="rue"        defaultValue={this.props.user.rue}/>
-                                    <TextField className="textField" label="Code Postal" variant="outlined" name="codePostal" defaultValue={this.props.user.codePostal}/>
-                                    <TextField className="textField" label="Ville"       variant="outlined" name="ville"      defaultValue={this.props.user.ville}/>
+                                    <TextField
+                                        className="textField"
+                                        label="Rue"
+                                        variant="outlined"
+                                        name="rue"
+                                        fullWidth
+                                        defaultValue={this.props.user.rue}
+                                    />
                                 </div>
 
                                 <div className="containerInput">
-                                    <TextField className="textField" label="Email"       variant="outlined" name="email"      defaultValue={this.props.user.email}/>
-                                    <TextField className="textField" label="Téléphone"   variant="outlined" name="tel"        defaultValue={this.props.user.tel}/>
+                                    <TextField className="textField" label="Code Postal" variant="outlined" name="codePostal" defaultValue={this.props.user.codePostal} />
+                                    <TextField className="textField" label="Ville" variant="outlined" name="ville" defaultValue={this.props.user.ville} />
+                                </div>
+
+                                <div className="containerInput">
+                                    <TextField className="textField" label="Email" variant="outlined" name="email" defaultValue={this.props.user.email} />
+                                    <TextField className="textField" label="Téléphone" variant="outlined" name="tel" defaultValue={this.props.user.tel} />
                                 </div>
 
                                 <Link to="/info">
-                                    <Button 
-                                        id="buttonModifUser" 
-                                        variant="contained" 
+                                    <Button
+                                        id="buttonModifUser"
+                                        variant="contained"
                                         color="primary"
                                         onClick={() => { this.enregistrerModif() }}
                                     >
                                         Enregistrer
-                                    </Button>
-
-                                    <Button
-                                        id="buttonAnnulerUser"
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Annuler
                                     </Button>
                                 </Link>
                             </Grid>
@@ -76,7 +99,7 @@ export default class Modif extends Component {
 
                         : <p>Aucune Personne Sélectionner</p>
                     }
-                    
+
                 </Paper>
             </Grid>
         );
@@ -86,17 +109,45 @@ export default class Modif extends Component {
         let formAdhesion = document.querySelector('#formModifUser');
 
         let objetModif = {
-            id :         this.props.user.id,
-            prenom :     formAdhesion.prenom.value,
-            nom :        formAdhesion.nom.value,
-            rue :        formAdhesion.rue.value,
-            codePostal : formAdhesion.codePostal.value,
-            ville :      formAdhesion.ville.value,
-            email :      formAdhesion.email.value,
-            tel :        formAdhesion.tel.value
+            id: this.props.user.id,
+            prenom: formAdhesion.prenom.value,
+            nom: formAdhesion.nom.value,
+            rue: formAdhesion.rue.value,
+            codePostal: formAdhesion.codePostal.value,
+            ville: formAdhesion.ville.value,
+            email: formAdhesion.email.value,
+            tel: formAdhesion.tel.value
         }
 
         this.props.socket.emit("modifUser", objetModif);
         this.props.miseAJourUsers(objetModif);
     }
 }
+
+Modif.propTypes = {
+    miseAJourUsers: PropTypes.func,
+
+    user: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.bool,
+
+        PropTypes.shape({
+
+            nom: PropTypes.string,
+            prenom: PropTypes.string,
+            rue: PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string
+            ]),
+
+            codePostal: PropTypes.number,
+            ville: PropTypes.string,
+            email: PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string
+            ]),
+
+            tel: PropTypes.number
+        }),
+    ]),
+};

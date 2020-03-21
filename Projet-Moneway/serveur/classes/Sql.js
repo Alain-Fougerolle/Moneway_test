@@ -29,7 +29,7 @@ class Sql {
             if(err) throw err;
             for(var results of result.values()) {
 
-                let objet = {
+                let user = {
                     id          : results.id,
                     prenom      : results.prenom,
                     nom         : results.nom,
@@ -41,19 +41,21 @@ class Sql {
                     transaction : []
                 }
 
+                // Pour éviter une table de liaison avec jointure afin de gagner du temps pour le test
+                // Stockage d'une string avec chaque valeur séparer par des virgules =)
+
                 for (let i = 0; i < results.montant_Transaction.split(',').length; i++) {
 
-                    let objetTransaction = {
+                    let userTransaction = {
                         idT      : results.id_Transaction.split(',')[i],
                         dateT    : results.date_Transaction.split(',')[i],
                         montantT : results.montant_Transaction.split(',')[i],
                         lieuxT   : results.lieux_Transaction.split(',')[i]
                     }
-
-                    objet.transaction.push(objetTransaction);
+                    user.transaction.push(userTransaction);
                 }
 
-                tab.push(objet);
+                tab.push(user);
             }
 
             client.emit("Users", tab);

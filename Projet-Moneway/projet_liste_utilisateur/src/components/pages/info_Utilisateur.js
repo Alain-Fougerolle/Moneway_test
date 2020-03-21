@@ -1,19 +1,34 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // Import Material UI //
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
 
 // Import Material UI Icons //
-import EuroIcon from '@material-ui/icons/Euro';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 // Components //
-import PopoverList from "../components_page/list_popover";
-import PopoverModif from "../components_page/modif_popover";
+import PopoverList from "../popover/list_popover";
+import PopoverModif from "../popover/modif_popover";
+import TableTransaction from "../table/table_transaction";
+
+// Redux //
+import { connect } from 'react-redux';
 
 
-export default class Info extends Component {
+class Info extends Component {
+
+    changeStatus = () => {
+
+        const action = {
+            type: "CHANGE_STATUS",
+            value: this.props.user.id
+        };
+
+        this.props.dispatch(action);
+    }
 
     render() {
         return (
@@ -24,28 +39,44 @@ export default class Info extends Component {
                 justify="center"
                 alignItems="center"
             >
-                
+
                 <Paper className="Paper">
-                    <PopoverList />
-                    <PopoverModif />
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                    >
+                        <PopoverList />
+                        {this.props.user
+                            ? <PopoverModif />
+                            : <div></div>
+                        }
+                    </Grid>
 
                     {this.props.user
                         ? <section className="App-Section-Info">
-                            <h2>{this.props.user.prenom} {this.props.user.nom}</h2>
+                            <div className="titreInfo">
+                                <AccountBoxIcon color={this.props.status.includes(this.props.user.id) ? "secondary" : "primary"} fontSize="large" />
+                                <h2>{this.props.user.prenom} {this.props.user.nom}</h2>
+                            </div>
                             <p><span className="InfoModifiable">Adresse : </span> {this.props.user.rue} {this.props.user.codePostal} {this.props.user.ville}</p>
                             <p><span className="InfoModifiable">email : </span> {this.props.user.email} </p>
                             <p><span className="InfoModifiable">tel : </span> {this.props.user.tel}</p>
+                            <Switch
+                                id="checkStatus"
+                                name="checkStatus"
+                                onChange={this.changeStatus}
+                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                checked={this.props.status.includes(this.props.user.id) ? true : false} // garde active la position du switch pour chaque utilisateur a chaque si il est false ou true
+                            />
 
-                            <h2 id="InfoTransaction">Transactions</h2>
-                            {this.props.user.transaction.map(({ idT, dateT, montantT, lieuxT }) => (
-                                <Typography component={'div'} key={idT}>
-                                    {montantT
-                                        ? <div>{montantT}<EuroIcon fontSize="small"/> le {dateT} à {lieuxT}</div>
-                                    
-                                        : <div>Pas de transactions</div>
-                                    }
-                                </Typography>
-                            ))}
+                            {this.props.user.transaction.length > 1
+                                ? <TableTransaction 
+                                    transactions={this.props.user.transaction}
+                                />
+
+                                : <div>Pas de transactions</div>
+                            }
                         </section>
 
                         : <p>Aucune Personne Sélectionner</p>
@@ -55,3 +86,38 @@ export default class Info extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        status: state.status
+    }
+}
+
+export default connect(mapStateToProps)(Info)
+
+Info.propTypes = {
+    user: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.object,
+
+        PropTypes.shape({
+
+            nom: PropTypes.string,
+            prenom: PropTypes.string,
+            rue: PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string
+            ]),
+
+            codePostal: PropTypes.number,
+            ville: PropTypes.string,
+            email: PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string
+            ]),
+
+            tel: PropTypes.number,
+            transaction: PropTypes.arrayOf(PropTypes.object)
+        }),
+    ]),
+};

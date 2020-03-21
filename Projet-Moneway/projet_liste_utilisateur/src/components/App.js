@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
+
+// Typo et Css //
+import 'typeface-roboto';
 import "../assets/styles/App.scss";
 
 // React Route //
@@ -7,7 +10,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Components //
 import { Liste, Info, Modif, NotFound } from './pages';
-
 
 export default class App extends Component {
     constructor(props) {
