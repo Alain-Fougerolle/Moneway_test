@@ -38,7 +38,11 @@ class Liste extends Component {
                     ? <List>
                         <h2 className="titreListeUser">Listes des utilisateurs</h2>
                         {this.props.users.map(({ id, prenom, nom }) => (
-                            <Paper className="Paper" key={id}>
+                            <Paper 
+                                className="Paper" 
+                                key={id} 
+                                onClick={() => { this.props.recupUser(id) }}
+                            >
                                 <ListItem button>
                                     <Grid
                                         container
@@ -59,10 +63,7 @@ class Liste extends Component {
                                                 />
                                             </ListItemIcon>
 
-                                            <ListItemText
-                                                className="listItemtext"
-                                                onClick={() => { this.props.recupUser(id) }}
-                                            >
+                                            <ListItemText className="listItemtext">
                                                 <p className="paragrapheListe">{prenom} {nom}</p>
                                             </ListItemText>
 
